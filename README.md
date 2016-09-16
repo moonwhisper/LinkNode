@@ -1,0 +1,2 @@
+# LinkNode
+struct LinKNode
