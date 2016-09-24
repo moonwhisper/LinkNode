@@ -10,7 +10,8 @@
 
 #include "stdafx.h"
 #include <stdlib.h>
-
+#define AscendingOrder 2
+#define DescendingOrder 1
 /*定义链表节点*/
 typedef struct linknode
 {
@@ -22,6 +23,7 @@ LinkNode *Head=NULL;
 
 bool AddNodeToLink(int InsertData);
 void PrintLink();
+void SortLink();
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -30,8 +32,17 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	printf("Please input the inter num:");
 	scanf("%d",&DataTotalNum);
+
+	if(DataTotalNum <= 0)
+	{
+		printf("Data num error!\n");
+		return 0;
+	}
+
 	printf("Data Input,each data ended with a Enter:");
 	
+
+
 	/*从控制台读取数据，并插入链表*/
 	for(Index=0;Index<DataTotalNum;Index++)
 	{
@@ -44,6 +55,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			return 0;
 		}
 	}
+
+	SortLink();
 
 	PrintLink();
 
@@ -107,4 +120,61 @@ void PrintLink()
 		return;
 
 	}
+}
+
+
+void SortLink()
+{
+	LinkNode *OuterLoopPointer=NULL;/*外层循环遍历指针*/
+	LinkNode *InnerLoopPointer=NULL;/*内层循环遍历指针*/
+	int DataTemp;					/*存储内层循环遍历找到的极值*/
+	LinkNode *IndexPointer=NULL;	/*内层循环遍历极值对应的指针*/
+
+	if(NULL==Head)
+	{
+		printf("The list is empty!!!\n");
+		return;
+	}
+
+	if(NULL==Head->Next)
+	{
+		printf("There is only one node in the list, so no need to rank it!!!\n");
+		return;
+	}
+	
+	OuterLoopPointer=Head;
+
+	while(NULL != OuterLoopPointer->Next)
+	{
+		InnerLoopPointer=OuterLoopPointer->Next;
+
+		DataTemp=InnerLoopPointer->Data;
+		IndexPointer=InnerLoopPointer;
+
+		while(NULL != InnerLoopPointer)
+		{
+			InnerLoopPointer=InnerLoopPointer->Next;
+
+			if(NULL != InnerLoopPointer)
+			{
+				if(InnerLoopPointer->Data < DataTemp)
+				{
+					DataTemp=InnerLoopPointer->Data;
+					IndexPointer=InnerLoopPointer;
+				}
+			}
+		}
+
+		/*如果内层循环遍历出来的极小值比当前外层循环值小，则交换数据域*/
+		if(DataTemp < OuterLoopPointer->Data)
+		{
+			IndexPointer->Data=OuterLoopPointer->Data;
+			OuterLoopPointer->Data=DataTemp;
+		}
+
+
+		OuterLoopPointer=OuterLoopPointer->Next;/*移动外部循环指针*/
+
+	}
+
 }
